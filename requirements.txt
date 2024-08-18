@@ -18,6 +18,9 @@ bs4
 build
 cachetools
 certifi
+Chroma
+chroma-hnswlib
+chromadb
 cffi
 chardet
 charset-normalizer
