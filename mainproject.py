@@ -17,6 +17,10 @@ from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain_openai import ChatOpenAI
 from langchain_community.embeddings import OpenAIEmbeddings 
 from langchain_openai import OpenAIEmbeddings
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 load_dotenv()
 
 api_key=st.secrets["api_key"]
