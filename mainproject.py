@@ -136,10 +136,16 @@ def process_chat(agent_executor, user_input, chat_history):
     # Convert Streamlit messages to the format expected by the agent
     formatted_history = []
     for message in chat_history:
-        if message["role"] == "user":
-            formatted_history.append(HumanMessage(content=message["content"]))
-        elif message["role"] == "assistant":
-            formatted_history.append(AIMessage(content=message["content"]))
+        if isinstance(message, HumanMessage):
+            formatted_history.append(message)
+        elif isinstance(message, AIMessage):
+            formatted_history.append(message)
+        else:
+            # If the message is in the old format (dictionary), convert it
+            if message["role"] == "user":
+                formatted_history.append(HumanMessage(content=message["content"]))
+            elif message["role"] == "assistant":
+                formatted_history.append(AIMessage(content=message["content"]))
 
     # Invoke the agent
     response = agent_executor.invoke(
@@ -174,14 +180,16 @@ def eskwelabs_chatbot():
         docx_file = st.file_uploader("Upload File", type=['txt', 'docx', 'pdf'])
 
         # Initialize session state variables
-        if 'chat_history' not in st.session_state:
-            st.session_state.chat_history = []
+        if 'messages' not in st.session_state:
+            st.session_state.messages = []
         if 'unique_id' not in st.session_state:
             st.session_state.unique_id = 0
         if 'chat_history_vector_store' not in st.session_state:
             st.session_state.chat_history_vector_store = None
         if 'agent_executor' not in st.session_state:
             st.session_state.agent_executor = agent_executor  # Use the global agent_executor
+        if 'fed_chat_history' not in st.session_state:
+            st.session_state.fed_chat_history = []    
 
         if docx_file is not None:
             file_details = {
@@ -213,25 +221,36 @@ def eskwelabs_chatbot():
     st.markdown("<h3 style='text-align: center;'>Chat with Askwelabs</h3>", unsafe_allow_html=True)
 
     # Display chat history
-    for message in st.session_state.chat_history:
+    for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    # Accept user input and handle multiple questions
+    # Accept user input
     user_input = st.chat_input("You: ")
 
     if user_input:
+        # Similarity search in chat history vector store
+        if st.session_state.chat_history_vector_store:
+            results = st.session_state.chat_history_vector_store.similarity_search(
+                query=user_input,
+                k=4,
+                filter={'use_case': 'chat_history'}
+            )
+            sequenced_chat_history = [(parse_message(result.metadata['msg_element']), result.metadata['msg_placement']) for result in results]
+            sequenced_chat_history.sort(key=lambda pair: pair[1])
+            st.session_state.fed_chat_history = [message[0] for message in sequenced_chat_history]
+
         # Process chat and get response
-        response = process_chat(st.session_state.agent_executor, user_input, st.session_state.chat_history)
+        response = process_chat(st.session_state.agent_executor, user_input, st.session_state.fed_chat_history)
 
-        # Update chat history
-        st.session_state.chat_history.append({"role": "user", "content": user_input})
-        st.session_state.chat_history.append({"role": "assistant", "content": response})
+        # Update messages
+        st.session_state.messages.append({"role": "user", "content": user_input})
+        st.session_state.messages.append({"role": "assistant", "content": response})
 
+        # Update vector store
         formatted_human_message = format_message(HumanMessage(content=user_input))
         formatted_ai_message = format_message(AIMessage(content=response))
 
-        # Update vector store
         if st.session_state.chat_history_vector_store:
             st.session_state.chat_history_vector_store.add_texts(
                 texts=[user_input, response],
@@ -254,12 +273,6 @@ def eskwelabs_chatbot():
                 embedding=embedding_openai
             )
             st.session_state.unique_id += 2
-
-        # Display the new messages
-        with st.chat_message("user"):
-            st.markdown(user_input)
-        with st.chat_message("assistant"):
-            st.markdown(response)
 
         # Force a rerun to update the chat display
         st.rerun()
