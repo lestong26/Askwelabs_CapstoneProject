@@ -37,7 +37,9 @@ vectordb = Chroma(client=persistent_client, collection_name=COLLECTION_NAME,embe
 llm = ChatOpenAI(
     model="gpt-3.5-turbo",
     temperature=0,
-    max_tokens=300,)
+    max_tokens=300,
+    api_key=st.secrets["api_key"],
+)
 
 prompt = ChatPromptTemplate(
     messages=[
