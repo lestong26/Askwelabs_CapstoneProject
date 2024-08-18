@@ -21,8 +21,9 @@ from langchain_openai import OpenAIEmbeddings
 load_dotenv()
 
 api_key=st.secrets["api_key"]
+embedding_openai = api_key
 
-embedding_openai = OpenAIEmbeddings()
+# embedding_openai = OpenAIEmbeddings()
 
 CHROMA_DATA_PATH = 'embeddings_use_case_12_openai_semanticv2'
 COLLECTION_NAME = 'embeddings_use_case_12_openai_semanticv2'
