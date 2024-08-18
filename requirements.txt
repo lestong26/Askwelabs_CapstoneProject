@@ -193,6 +193,7 @@ SQLAlchemy
 stack-data
 starlette
 streamlit
+streamlit-option-menu
 sympy
 tabulate
 tenacity
