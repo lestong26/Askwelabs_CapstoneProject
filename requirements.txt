@@ -166,7 +166,6 @@ python-magic
 python-multipart
 python-pptx
 pytz
-pywin32
 PyYAML
 pyzmq
 rapidfuzz
