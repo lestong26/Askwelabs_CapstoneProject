@@ -1,3 +1,10 @@
+import sys
+import importlib.util
+
+if importlib.util.find_spec("pysqlite3") is not None:
+    import pysqlite3
+    sys.modules['sqlite3'] = pysqlite3
+
 import streamlit as st
 import io
 import os
@@ -17,14 +24,6 @@ from langchain.agents import create_tool_calling_agent, AgentExecutor
 from langchain_openai import ChatOpenAI
 from langchain_community.embeddings import OpenAIEmbeddings 
 from langchain_openai import OpenAIEmbeddings
-import sys
-import platform
-
-if platform.system() != "Windows":
-    __import__('pysqlite3')
-    sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-
-# Rest of your imports and code
 
 load_dotenv()
 
