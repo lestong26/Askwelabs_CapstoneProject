@@ -1,17 +1,7 @@
-import sys
-import importlib.util
-
-if importlib.util.find_spec("pysqlite3") is not None:
-    import pysqlite3
-    sys.modules['sqlite3'] = pysqlite3
-
 import streamlit as st
-import io
-import os
-import tempfile
 from streamlit_option_menu import option_menu
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langchain_core.prompts import MessagesPlaceholder
