@@ -21,9 +21,6 @@ certifi
 cffi
 chardet
 charset-normalizer
-Chroma
-chroma-hnswlib
-chromadb
 click
 colorama
 coloredlogs
