@@ -178,6 +178,7 @@ def eskwelabs_chatbot():
     with st.sidebar:
         st.markdown("<h1 style='text-align: center;'>Askwelabs</h1>", unsafe_allow_html=True)
         st.markdown("<h3 style='text-align: center;'>Upload and Process Your Resume</h3>", unsafe_allow_html=True)
+        st.markdown("<h5 style='text-align: center;'>You can upload your resume for a more tailored experience, or you can skip this step and just ask questions directly.</h5>", unsafe_allow_html=True)
         docx_file = st.file_uploader("Upload File", type=['txt', 'docx', 'pdf'])
 
         # Initialize session state variables
@@ -282,7 +283,7 @@ def eskwelabs_chatbot():
 def study_path():
     
     st.markdown("<h3 style='text-align: center;'>Askwelabs Study Path Guidance</h3>", unsafe_allow_html=True)
-    st.markdown("<h4 style='text-align: center;'>Chat with Askwelabs to get personalized study path recommendations</h4>", unsafe_allow_html=True)
+    st.markdown("<h6 style='text-align: center;'>Chat with Askwelabs to get personalized study path recommendations<br>Use the chatbot to discover personalized study paths and guidance for your learning journey</h6>", unsafe_allow_html=True)
     
     ### Load ChromaDB ###
     CHROMA_DATA_PATH1 = 'embeddings_use_case_3_openai'
@@ -452,14 +453,14 @@ def about():
     st.write("""
         The journey to becoming a data scientist or data analyst is both exciting and challenging. 
         We understand the significance of thorough preparation and the impact it can have on your success 
-        in Eskwelab's bootcamps. Our motivation stems from the desire to bridge the gap between where you are 
+        in Eskwelabs' bootcamps. Our motivation stems from the desire to bridge the gap between where you are 
         now and where you want to be, ensuring that you are well-prepared to thrive in this rigorous learning environment.
     """)
 
         # Why We Created This App Section
     st.header("Why We Created This App")
     st.write("""
-        As a future data scientist or analyst, you aim to maximize your experience in the Eskwelab's bootcamps. 
+        As a future data scientist or analyst, you aim to maximize your experience in the Eskwelabs' bootcamps. 
         We created this virtual coach to guide you every step of the way, providing you with the resources, 
         tools, and personalized guidance necessary to excel. Our goal is to help you make the most of your time, 
         ensuring that you gain the skills, knowledge, and confidence needed to succeed in the bootcamp and beyond.
